@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ФЕНИКС-1|ЦИФРЫ</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: monospace;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+        #digits {
+            font-size: 10rem;
+            letter-spacing: 1rem;
+            height: 12rem;
+            margin: 0 auto;
+        }
+        #access-form {
+            display: none;
+            margin-top: 2rem;
+        }
+        input {
+            background: transparent;
+            color: #fff;
+            border: none;
+            border-bottom: 1px solid #fff;
+            padding: 0.5rem;
+            margin: 0.5rem;
+            font-family: monospace;
+            text-align: center;
+            width: 5rem;
+            font-size: 1.5rem;
+            outline: none;
+        }
+        button {
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            padding: 0.5rem 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="digits"></div>
+    <div id="access-form">
+        <input type="text" id="code-input" maxlength="4" placeholder="Код">
+        <button onclick="checkCode()">→</button>
+    </div>
+
+    <script>
+        const sequence = [7, 0, 4, 9];
+        let currentIndex = 0;
+        const digitsElement = document.getElementById('digits');
+        const formElement = document.getElementById('access-form');
+
+        // Анимация цифр
+        function animateDigits() {
+            digitsElement.textContent = sequence[currentIndex];
+            currentIndex = (currentIndex + 1) % sequence.length;
+        }
+
+        // Запуск анимации
+        const animationInterval = setInterval(animateDigits, 1000);
+        
+        // Остановка через 8 секунд (2 полных цикла)
+        setTimeout(() => {
+            clearInterval(animationInterval);
+            digitsElement.textContent = '––––';
+            formElement.style.display = 'block';
+            document.getElementById('code-input').focus();
+        }, 8000);
+
+        // Проверка кода
+        function checkCode() {
+            if (document.getElementById('code-input').value === '7049') {
+                window.location.href = 'https://phoenix1.ru/terminal?auth=7049';
+            } else {
+                alert('Неверно');
+                document.getElementById('code-input').value = '';
+            }
+        }
+
+        // Обработка Enter
+        document.getElementById('code-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') checkCode();
+        });
+    </script>
+</body>
+</html>
