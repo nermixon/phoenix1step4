@@ -17,15 +17,18 @@
             justify-content: center;
             overflow: hidden;
         }
+        #container {
+            width: 300px;
+            margin: 0 auto;
+        }
+        #phase1, #phase2, #phase3 {
+            display: none;
+        }
         #digits {
             font-size: 10rem;
             letter-spacing: 1rem;
             height: 12rem;
             margin: 0 auto;
-        }
-        #access-form {
-            display: none;
-            margin-top: 2rem;
         }
         input {
             background: transparent;
@@ -36,7 +39,7 @@
             margin: 0.5rem;
             font-family: monospace;
             text-align: center;
-            width: 5rem;
+            width: 8rem;
             font-size: 1.5rem;
             outline: none;
         }
@@ -52,48 +55,84 @@
     </style>
 </head>
 <body>
-    <div id="digits"></div>
-    <div id="access-form">
-        <input type="text" id="code-input" maxlength="4" placeholder="Код">
-        <button onclick="checkCode()">→</button>
+    <div id="container">
+        <!-- Фаза 1: Ввод пароля hei1tp -->
+        <div id="phase1">
+            <div>ДОСТУП К СИСТЕМЕ</div>
+            <input type="text" id="access-code" maxlength="6" placeholder="Код доступа">
+            <button onclick="checkAccessCode()">→</button>
+        </div>
+
+        <!-- Фаза 2: Анимация 20 циклов -->
+        <div id="phase2">
+            <div id="digits">7</div>
+        </div>
+
+        <!-- Фаза 3: Финальный пароль -->
+        <div id="phase3">
+            <div>ВВЕДИТЕ КОД АКТИВАЦИИ</div>
+            <input type="text" id="final-code" maxlength="4" placeholder="XXXX">
+            <button onclick="checkFinalCode()">→</button>
+        </div>
     </div>
 
     <script>
-        const sequence = [7, 0, 4, 9];
+        // Конфигурация
+        const ACCESS_CODE = "hei1tp";
+        const FINAL_CODE = "7049";
+        const SEQUENCE = [7, 0, 4, 9];
+        let cyclesCount = 0;
         let currentIndex = 0;
-        const digitsElement = document.getElementById('digits');
-        const formElement = document.getElementById('access-form');
 
-        // Анимация цифр
-        function animateDigits() {
-            digitsElement.textContent = sequence[currentIndex];
-            currentIndex = (currentIndex + 1) % sequence.length;
+        // Инициализация
+        document.getElementById('phase1').style.display = 'block';
+        document.getElementById('access-code').focus();
+
+        // Фаза 1: Проверка hei1tp
+        function checkAccessCode() {
+            if (document.getElementById('access-code').value.toLowerCase() === ACCESS_CODE) {
+                document.getElementById('phase1').style.display = 'none';
+                document.getElementById('phase2').style.display = 'block';
+                startAnimation();
+            } else {
+                alert('Неверный код доступа');
+                document.getElementById('access-code').value = '';
+            }
         }
 
-        // Запуск анимации
-        const animationInterval = setInterval(animateDigits, 1000);
-        
-        // Остановка через 8 секунд (2 полных цикла)
-        setTimeout(() => {
-            clearInterval(animationInterval);
-            digitsElement.textContent = '––––';
-            formElement.style.display = 'block';
-            document.getElementById('code-input').focus();
-        }, 8000);
+        // Фаза 2: Анимация 20 циклов (без счётчика)
+        function startAnimation() {
+            const animationInterval = setInterval(() => {
+                document.getElementById('digits').textContent = SEQUENCE[currentIndex];
+                currentIndex = (currentIndex + 1) % SEQUENCE.length;
+                
+                if (currentIndex === 0) cyclesCount++;
+                
+                if (cyclesCount >= 20) {
+                    clearInterval(animationInterval);
+                    document.getElementById('phase2').style.display = 'none';
+                    document.getElementById('phase3').style.display = 'block';
+                    document.getElementById('final-code').focus();
+                }
+            }, 1000);
+        }
 
-        // Проверка кода
-        function checkCode() {
-            if (document.getElementById('code-input').value === '7049') {
+        // Фаза 3: Проверка финального кода
+        function checkFinalCode() {
+            if (document.getElementById('final-code').value === FINAL_CODE) {
                 window.location.href = 'https://phoenix1.ru/terminal?auth=7049';
             } else {
-                alert('Неверно');
-                document.getElementById('code-input').value = '';
+                alert('Ошибка активации');
+                document.getElementById('final-code').value = '';
             }
         }
 
         // Обработка Enter
-        document.getElementById('code-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') checkCode();
+        document.getElementById('access-code').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkAccessCode();
+        });
+        document.getElementById('final-code').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkFinalCode();
         });
     </script>
 </body>
