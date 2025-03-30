@@ -100,7 +100,7 @@
             }
         }
 
-        // Фаза 2: Анимация 20 циклов (без счётчика)
+        // Фаза 2: Анимация 20 циклов
         function startAnimation() {
             const animationInterval = setInterval(() => {
                 document.getElementById('digits').textContent = SEQUENCE[currentIndex];
@@ -120,7 +120,8 @@
         // Фаза 3: Проверка финального кода
         function checkFinalCode() {
             if (document.getElementById('final-code').value === FINAL_CODE) {
-                window.location.href = 'https://phoenix1.ru/terminal?auth=7049';
+                // Переход на 5 этап
+                window.location.href = 'https://nermixon.github.io/phoenix1step5/';
             } else {
                 alert('Ошибка активации');
                 document.getElementById('final-code').value = '';
